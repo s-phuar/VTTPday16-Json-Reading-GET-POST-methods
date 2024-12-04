@@ -56,6 +56,8 @@ public class HttpBinService {
     try{
         //create template for sending request
         RestTemplate template = new RestTemplate();
+        //consider the below
+            //String payload = template.getForObject(url, String.class);
         //call the URL
         ResponseEntity<String> resp = template.exchange(req, String.class);
         //get the payload

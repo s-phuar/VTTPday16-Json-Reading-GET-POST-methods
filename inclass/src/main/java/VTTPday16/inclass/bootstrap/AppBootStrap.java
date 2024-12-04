@@ -26,11 +26,11 @@ public class AppBootStrap implements CommandLineRunner{ // CommandLineRunner wil
     public void run(String... args){ 
 
         //testing Httpbinservice
-        // httpBinSvc.get();
         // httpBinSvc.getJokes();
         // httpBinSvc.getWithQueryParams();
+        // httpBinSvc.postJson();
         // httpBinSvc.postForm();
-        httpBinSvc.postJson();
+        httpBinSvc.get();
 
 
 //         //Example json text, we will be reading and writing Json
@@ -108,7 +108,7 @@ public class AppBootStrap implements CommandLineRunner{ // CommandLineRunner wil
 //         JsonReader jsonReader = Json.createReader(reader);
 //         JsonObject barney = jsonReader.readObject();
 
-//         System.out.printf(">>> barney\n\t:%s\n", barney.toString());
+    //         System.out.printf(">>> barney\n\t:%s\n", barney.toString());
 
 //         String arrData = "[ 123, 245, 789 ]";
 //         reader = new StringReader(arrData);
@@ -117,6 +117,16 @@ public class AppBootStrap implements CommandLineRunner{ // CommandLineRunner wil
 //         JsonArray numList = jsonReader.readArray();
 //         for (int i = 0; i < numList.size(); i++)
 //             System.out.printf("%d: %d\n", i, numList.getInt(i));
+
+
+
+//when we retrieve the jsonString, we can deserialize it back to a jsonObject with:
+    //Retrieve the JSON string from Redis
+        // String jsonString = (String) template.opsForHash().get("orderHash", "order:123");
+
+    //Now parse the JSON string back into a JsonObject
+        // JsonObject jsonObject = Json.createReader(new StringReader(jsonString)).readObject();
+
 
 
 

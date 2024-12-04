@@ -30,17 +30,17 @@ public class HttpbinService {
     public static final String POST_URL = "https://httpbin.org/post";
 
     public void getJokes(){
-        //build(configure) the request
+        //build(configure) the GET request with no payload <Void>
             //GET /jokes/ten
             //Accet: application/json
-        RequestEntity<Void> req = RequestEntity //whats in the request body? Void!
+        RequestEntity<Void> req = RequestEntity //whats in the request's body? Void!
                 .get(JOKES_URL) //if we want to add on stuff on top of JOKES_URL, use UriStringBuilder
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
                 
-        //create RestTemplate for sending request
+        //create RestTemplate for sending the GET request
         RestTemplate template = new RestTemplate();
-        ResponseEntity<String> resp;
+        ResponseEntity<String> resp; //expecting our response to be a string
 
         try{
             //make the call
@@ -48,14 +48,15 @@ public class HttpbinService {
             //extract the payload from body
             String payload = resp.getBody();
             JsonReader reader = Json.createReader(new StringReader(payload));
-            JsonArray result = reader.readArray();
+            JsonArray result = reader.readArray(); //the Json file starts as an arrahy in this case
 
             //loop through and print out setup and punchline
             for(int i = 0; i < result.size(); i++){
-                JsonObject joke = result.getJsonObject(i);
-                System.out.printf("SETUP: $s\nPUNCHLINE: %s\n\n"
+                JsonObject joke = result.getJsonObject(i); //grab each object within the array
+                System.out.printf("SETUP: %s\nPUNCHLINE: %s\n\n"
                         , joke.getString("setup"), joke.getString("punchline"));
                 }
+
         }catch(Exception ex){
             //handle error
             ex.printStackTrace();
@@ -63,24 +64,25 @@ public class HttpbinService {
     }
 
 
+    //sending a GET request with query params in URL. response should be a Json file with the params under args object
     public void getWithQueryParams(){
 
         String url = UriComponentsBuilder  
                 .fromUriString(GET_URL)
-                .queryParam("name", "fred") //hardcoded with fred
+                .queryParam("name", "fred") //hardcoded query with ?name=fred
                 .queryParam("email", "fred@gmail.com") //hardcoded with fred@gmail.com
                 .toUriString();
 
         System.out.printf("URL with query params: \n\t%s\n", url);
 
-        RequestEntity<Void> req = RequestEntity
+        RequestEntity<Void> req = RequestEntity //nothing in the request's body
                 .get(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .build();
     }
 
     public void postJson(){
-        //if we want to send Json payload via HTTP POST, to POST_URL
+        //if we want to send request with a Json payload via HTTP POST, to POST_URL
 
         //creating Json payload
         JsonObject json = Json.createObjectBuilder()
@@ -88,7 +90,7 @@ public class HttpbinService {
                 .add("quantity", 10)
                 .build();
 
-        //building request for Json payload
+        //building request for a 'String' Json payload
         RequestEntity<String> req = RequestEntity
                 .post(POST_URL) //specifies this is a POST request and sets the target url
                 //intechangeable
@@ -96,7 +98,7 @@ public class HttpbinService {
                     // .accept(MediaType.APPLICATION_JSON)
                 .header("Accept", "application/json") //we are expecting a Json response
                 .header("Content-Type", "application/json") //the body of our request contains Json
-                .body(json.toString(), String.class); //convert Json into Json string repsentation
+                .body(json.toString(), String.class); //convert Json into Json string repsentation, put it as part of the request's body in the form of a string
         
         //sending the request
         RestTemplate template = new RestTemplate();
@@ -117,12 +119,12 @@ public class HttpbinService {
         form.add("name", "apple");
         form.add("quantity", "%d".formatted(3));
 
-        //create a request
+        //create a request, contating a MVM
         RequestEntity<MultiValueMap<String, String>> req = RequestEntity
                 .post(POST_URL)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(form, MultiValueMap.class); //don't need build
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED) //encoded form
+                .accept(MediaType.APPLICATION_JSON) //expecting json respponse
+                .body(form, MultiValueMap.class); //put form as part of request body in the form of MVM
 
         //sending the request
         RestTemplate template = new RestTemplate();
@@ -165,8 +167,8 @@ public class HttpbinService {
         
         JsonObject headers = result.getJsonObject("headers");
 
-        System.out.printf(">>> header: %s\n", headers.toString());
-        System.out.printf(">>> X-UUID: %s\n", headers.getString("X-Uuid")); //check response(?), its uses lowercase
+        System.out.printf(">>> header: %s\n", headers.toString()); //print the entire header
+        System.out.printf(">>> X-UUID: %s\n", headers.getString("X-Uuid")); //print only header using X-UUID
         
 
         // System.out.printf(">>> payload \n\t%s\n", payload);
