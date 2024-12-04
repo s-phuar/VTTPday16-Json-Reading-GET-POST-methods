@@ -1,5 +1,7 @@
 package VTTPday16.workshop.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import VTTPday16.workshop.models.SearchParams;
 import VTTPday16.workshop.service.HttpBinService;
 import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
@@ -26,17 +29,15 @@ public class HttpBinController {
 
     @GetMapping("/search")
     public String search(@RequestParam MultiValueMap<String, String> form, Model model){
-        String query = form.getFirst("query");
-        String limit = form.getFirst("limit");
-        String rating = form.getFirst("rating");
-  
-        JsonObject imgJson = httpBinSvc.getImageJson(query, limit, rating);
-        // //extract image url from json
-        // JsonArray arryObj = imgJson.getJsonArray("data");
-        // JsonObject imgObj = arryObj.getJsonObject(1).getJsonObject("image").getJsonObject("fixed_height");
-        // String imgSrc = imgObj.getString("url");
 
-        model.addAttribute("url", imgSrc);
+        SearchParams params = new SearchParams(form.getFirst("query"),
+                Integer.parseInt(form.getFirst("limit")),
+                form.getFirst("rating"));
+
+        List<String> images = httpBinSvc.search(params);
+
+        model.addAttribute("query", params.query());
+        model.addAttribute("images", images);
 
         return "image";
     }
@@ -53,13 +54,11 @@ public class HttpBinController {
             //g
 
     //pass these information to service
-        //httpBinSvc.method(query, limit, rating);
+        //httpBinSvc.search(query, limit, rating);
         //Svc will create the payload and build request according to the information
-            //we need to get api key somehow
+            //using api key 
         //send the request via RestTemplate
-        //return the image src back to controller
-            //maybe we receive it as a Json? need to use AppBootStrap to convert to string before passing to controller?
-            //probably not
+        //return the List of image urls back to controller
         //cotroller will pass image src to view
     
 }

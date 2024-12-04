@@ -6,11 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <div>    
-        <img src="${url}" alt="jane">
+    <h1>Search terms: <code data-th-text="${query}"></code> </h1>
+
+    <div data-th-if="${#lists.isEmpty(images)}">
+       <h3>Your search produced no result</h3>
     </div>
 
+    <div data-th-unless="${#lists.isEmpty(images)}" class="pictures">
+       <img data-th-each="img: ${images}" data-th-src="${img}">
+    </div>
 
+    <a data-th-href="@{/}"> Back </a>
 
 </body>
 </html>
