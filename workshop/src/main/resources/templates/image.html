@@ -8,6 +8,7 @@
 <body>
     <h1>Search terms: <code data-th-text="${query}"></code> </h1>
 
+    <!-- if imagesList is empty, do this... -->
     <div data-th-if="${#lists.isEmpty(images)}">
        <h3>Your search produced no result</h3>
     </div>
