@@ -48,7 +48,7 @@ public class HttpbinService {
             //extract the payload from body
             String payload = resp.getBody();
             JsonReader reader = Json.createReader(new StringReader(payload));
-            JsonArray result = reader.readArray(); //the Json file starts as an arrahy in this case
+            JsonArray result = reader.readArray(); //the Json file starts as an array in this case
 
             //loop through and print out setup and punchline
             for(int i = 0; i < result.size(); i++){
